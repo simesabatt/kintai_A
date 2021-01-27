@@ -23,4 +23,9 @@ Things you may want to cover:
 
 * ...
 
-test
+## 開発環境
+
+* VS-Code
+* Ruby
+* Rails
+* Git
