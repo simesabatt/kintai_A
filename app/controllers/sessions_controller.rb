@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       # 三項演算子
       # [条件式] ? [真（true）の場合実行される処理] : [偽（false）の場合実行される処理]
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      redirect_to user
+      redirect_back_or user
     else
       flash.now[:danger] = '認証に失敗しました。'
       render :new

@@ -29,3 +29,19 @@ Things you may want to cover:
 * Ruby
 * Rails
 * Git
+
+memo
+bin/rails db:reset の代わり:
+
+$ rm db/development.sqlite3
+$ bin/rails db:setup
+
+
+bin/rails db:migrate:reset の代わり:
+
+$ rm db/development.sqlite3
+$ bin/rails db:create db:migrate
+
+このあと
+rails db:seed
+をする
