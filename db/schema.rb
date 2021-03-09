@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210307111257) do
+ActiveRecord::Schema.define(version: 20210307143109) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 20210307111257) do
     t.datetime "basic_time", default: "2021-03-06 23:00:00"
     t.datetime "work_time", default: "2021-03-06 22:30:00"
     t.boolean "superior", default: false
+    t.datetime "start_basic_time", default: "2021-03-07 00:00:00"
+    t.datetime "finish_basic_time", default: "2021-03-07 09:00:00"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
