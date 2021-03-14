@@ -71,8 +71,8 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-          <!--残業申請-->
-          <td><%= link_to "残業申請", '#', class: "btn btn-primary" %></td>
+          <!--残業申請 リンク先は仮-->
+          <td><%= link_to "残業申請", edit_overwork_request_user_path, remote: true, class: "btn btn-primary" %></td>
           <!--日付-->
           <td><%= l(day.worked_on, format: :short) %></td>
           <!--曜日-->
@@ -96,7 +96,7 @@
           <!--出勤ボタン表示-->
           <td>
             <% if btn_text = attendance_attend(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-secondary btn-attendance btn-sm" %>
+              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-xs" %>
             <% end %>
           </td>
           <!--退社：時-->
@@ -110,7 +110,7 @@
           <!--退社ボタン表示-->
           <td>
              <% if btn_text = attendance_leave(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-secondary btn-attendance btn-sm" %>
+              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-xs" %>
             <% end %>
           </td>
           <!--在社時間-->
@@ -158,3 +158,6 @@
     </tfoot>    
   </table>
 </div>
+
+<!--モーダルウインドウ表示-->
+<div id="edit-overwork-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
