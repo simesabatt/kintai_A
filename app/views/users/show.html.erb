@@ -71,8 +71,8 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-          <!--残業申請 リンク先は仮-->
-          <td><%= link_to "残業申請", edit_overwork_request_user_path, remote: true, class: "btn btn-primary" %></td>
+          <!--残業申請 リンク先は仮 拡張パラメータ-->
+          <td><%= link_to "残業申請", edit_overwork_request_user_attendance_path(@user, day), remote: true, class: "btn btn-primary" %></td>
           <!--日付-->
           <td><%= l(day.worked_on, format: :short) %></td>
           <!--曜日-->

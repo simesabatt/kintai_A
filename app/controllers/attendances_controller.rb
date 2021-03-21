@@ -46,6 +46,12 @@ class AttendancesController < ApplicationController
   def overtime_request
   end
 
+  def edit_overwork_request
+    # @attendance = Attendance.find(params[:id])↓これでも良い
+    @attendance = User.find(params[:user_id]).attendances.find(params[:id])
+    @user = User.find(@attendance.user_id)
+  end
+
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params

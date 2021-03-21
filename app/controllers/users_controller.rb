@@ -58,12 +58,6 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  # def edit_overwork_request
-  #   @day
-  #   @attendance
-  # end
-
-
   private
 
     def user_params
