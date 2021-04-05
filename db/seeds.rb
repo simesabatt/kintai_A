@@ -11,14 +11,14 @@ User.create!(name: "上長1",
   email: "sample1@email.com",
   password: "password",
   password_confirmation: "password",
-  admin: false,
+  admin: true,
   superior: true)
 
 User.create!(name: "上長2",
   email: "sample2@email.com",
   password: "password",
   password_confirmation: "password",
-  admin: false,
+  admin: true,
   superior: true)
 
 60.times do |n|

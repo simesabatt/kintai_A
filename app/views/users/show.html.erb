@@ -71,7 +71,7 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-          <!--残業申請 リンク先は仮 拡張パラメータ-->
+          <!--残業申請 拡張パラメータ-->
           <td><%= link_to "残業申請", edit_overwork_request_user_attendance_path(@user, day), remote: true, class: "btn btn-primary" %></td>
           <!--日付-->
           <td><%= l(day.worked_on, format: :short) %></td>
@@ -123,15 +123,33 @@
           <!--備考-->
           <td><%= day.note %></td>
           <!--終了予定時間：時-->
-          <td></td>
+          <td><%= l(day.overwork_request, format: :hour) if day.overwork_request.present? %></td>
           <!--終了予定時間：分-->
-          <td></td>
+          <td><%= l(day.overwork_request.floor_to(15.minutes), format: :minute) if day.overwork_request.present? %></td>
           <!--時間外時間-->
-          <td></td>
+          <!-- = 終了予定時間 - 指定勤務終了時間-->
+          <td>
+            <% if day.overwork_request.present? %>
+              <% if day.next_day == true %>
+                <%= jikangai = hour_2f(int_time(day.overwork_request) - int_time(@user.finish_basic_time) + 24 * 60) %>
+              <% else %>
+                <%= jikangai = hour_2f(int_time(day.overwork_request) - int_time(@user.finish_basic_time)) %>
+              <% end %>
+            <% end %>
+          </td>
           <!--業務処理内容-->
-          <td></td>
+          <td><%= day.work_content %></td>
           <!--指示者確認印-->
-          <td></td>
+          <td>
+            <% if day.superior_confirm == 1 %>
+              <%= "上長1に残業申請中" %>
+            <% elsif day.superior_confirm == 2 %>
+              <%= "上長2に残業申請中" %>
+            <% else %>
+              <% "" %>
+            <% end %>
+          <%= day.superior_confirm %>
+          </td>
         </tr>
       <% end %>
     </tbody>
@@ -146,14 +164,19 @@
         <td rowspan="2" colspan="5"></td>
         <td rowspan="1" colspan="1">
           <p>所属長承認　未</p>
-          <p>プルダウン</p>
+          <form>
+            <select name="kibun">
+              <option value="saikou">上長1</option>
+              <option value="botiboti">上長2</option>
+            </select>
+          </form>
         </td>
       </tr>
       <tr>
         <td colspan="2"><%= @attendances.count %></td>
         <td colspan="6"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
         <td colspan="1"><%= format("%.2f", @total_working_times.to_f) %></td>
-        <td>申請ボタン</td>
+        <td><%= link_to "申請ボタン", '#', class: "btn btn-primary" %></td>
       </tr>
     </tfoot>    
   </table>

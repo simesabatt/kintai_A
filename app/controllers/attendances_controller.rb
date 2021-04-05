@@ -52,10 +52,21 @@ class AttendancesController < ApplicationController
     @user = User.find(@attendance.user_id)
   end
 
+  def update_overwork_request
+    @attendance = Attendance.find(params[:id])
+    @user = User.find(params[:user_id])
+    if @attendance.update_attributes(overwork_request_params)
+      flash[:success] = "残業の申請に成功しました。"
+    else
+      flash[:danger] = "残業の申請に失敗しました。<br>" + @user.errors.full_messages.join("</br>")
+    end
+    redirect_to @user
+  end
+
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+      params.require(:user).permit(attendance: [:started_at, :finished_at, :note])
     end
 
       # beforeフィルター
@@ -67,5 +78,10 @@ class AttendancesController < ApplicationController
         flash[:danger] = "編集権限がありません。"
         redirect_to(root_url)
       end  
+    end
+
+    # 残業申請モーダル
+    def overwork_request_params
+      params.require(:attendance).permit(:overwork_request, :next_day, :work_content, :superior_confirm)
     end
 end

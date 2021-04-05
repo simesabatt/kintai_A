@@ -22,4 +22,14 @@ module AttendancesHelper
   def working_times(start, finish)
     format("%.2f", (((finish - start) / 60) / 60.0))
   end
+
+  # 時刻の時と分だけ取り出してint型に変換
+  def int_time(datetime)
+    return datetime.hour * 60 + datetime.min
+  end
+
+  # 時間表示に変換
+  def hour_2f(int_time)
+    format("%.2f", int_time / 60)
+  end
 end
