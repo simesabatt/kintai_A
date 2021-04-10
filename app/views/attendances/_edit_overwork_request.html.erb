@@ -28,7 +28,7 @@
                   <td><%= f.time_select :overwork_request, {include_blank: true}, class: "input-sm" %></td>
                   <td><%= f.check_box :next_day, {}, "true" "false" %></td>
                   <td><%= f.text_field :work_content, class: "form-control" %></td>
-                  <td><%= f.select :superior_confirm, {"上長1": 1, "上長2": 2}, {include_blank: true}, class: "form-control", required: true %></td>
+                  <td><%= f.collection_select :superior_confirm, User.where(superior: true).where.not(id: params[:user_id]), :id, :name, {include_blank: true}, class: "form-control", required: true %></td>
                 </tr>
               </table>
 

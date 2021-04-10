@@ -141,14 +141,14 @@
           <td><%= day.work_content %></td>
           <!--指示者確認印-->
           <td>
-            <% if day.superior_confirm == 1 %>
+            <% if day.superior_confirm == 2 %>
               <%= "上長1に残業申請中" %>
-            <% elsif day.superior_confirm == 2 %>
+            <% elsif day.superior_confirm == 3 %>
               <%= "上長2に残業申請中" %>
             <% else %>
               <% "" %>
             <% end %>
-          <%= day.superior_confirm %>
+          <%#= day.superior_confirm %>
           </td>
         </tr>
       <% end %>
