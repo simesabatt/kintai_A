@@ -1,0 +1,27 @@
+<% provide(:title, "Edit") %>
+<% provide(:class_text, 'user--edit') %>
+<% provide(:button_text, '更新') %>
+<h1>出社中社員一覧</h1>
+
+<div class="container">
+  <div class="row">
+    <table class="table table-hover" id="employees_on_duty">
+      <thead>
+       <tr>
+        <td>社員番号</td>
+        <td>名前</td>
+       </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <% if user.work_now %>
+            <tr>
+              <td><%= user.employee_number %></td>
+              <td><%= user.name %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

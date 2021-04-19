@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
+  get 'users/employees_on_duty', to: 'users#employees_on_duty'
 
   resources :users do
     collection { post :import }
