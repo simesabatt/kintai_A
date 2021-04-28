@@ -1,4 +1,4 @@
-<%= form_with(model: user, local:true) do |f| %>
+<%= form_with(model: base, local:true) do |f| %>
   <%= render 'shared/error_messages', object: user %>
 
   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
@@ -13,23 +13,11 @@
   <%= f.label :uid, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :uid, class: "form-control" %>
 
-  <%= f.label :password, class: "label-#{yield(:class_text)}" %>
-  <%= f.password_field :password, class: "form-control" %>
-
-  <%= f.label :password_confirmation, class: "label-#{yield(:class_text)}" %>
-  <%= f.password_field :password_confirmation, class: "form-control" %>
-
   <%= f.label :basic_work_time, class: "label-#{yield(:class_text)}" %>
   <%= f.time_field :basic_work_time, class: "form-control" %>
 
-  <%= f.label :designates_work_start_time, class: "label-#{yield(:class_text)}" %>
-  <%= f.time_field :designates_work_start_time, class: "form-control" %>
-
-  <%= f.label :designates_work_end_time, class: "label-#{yield(:class_text)}" %>
-  <%= f.time_field :designates_work_end_time, class: "form-control" %>
-
   <div class="center">
-    <%= f.submit "編 集", class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
+    <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
     <% link_to :back do %>
       <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>">
         キャンセル

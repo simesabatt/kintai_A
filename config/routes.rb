@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
 
   get 'users/employees_on_duty', to: 'users#employees_on_duty'
+  
+  get 'bases/new'
+  resources :bases
 
   resources :users do
     collection { post :import }
@@ -23,5 +26,7 @@ Rails.application.routes.draw do
         patch 'update_overwork_request'
       end
     end
+    # resources :bases do
+    # end
   end
 end

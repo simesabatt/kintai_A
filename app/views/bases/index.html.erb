@@ -1,0 +1,63 @@
+<% provide(:title, 'Base Index') %>
+<% provide(:class_text, 'label-user--edit') %>
+<% provide(:button_text, '更新') %>
+<h1>拠点一覧</h1>
+
+<div class="container">
+  <div class="row">
+    <table class="table table-hover table-bordered" >
+      <thead>
+       <tr>
+        <td></td>
+        <td></td>
+        <td>拠点番号</td>
+        <td>拠点名</td>
+        <td>勤怠種類</td>
+       </tr>
+      </thead>
+
+      <tbody>
+        <% @bases.each do |b| %>
+          <tr>
+            <td><%= link_to "修正", "/bases/" + b.id.to_s + "/edit", method: :get, class: "btn btn-md btn-primary" %></td>
+            <td><%= link_to "削除", b, method: :delete, class: "btn btn-md btn-primary",
+                data: { confirm:"削除してよろしいですか？" } %></td>
+            <td><%= b.base_num %></td>
+            <td><%= b.base_name %></td>
+            <td><%= b.base_type %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading ">
+      <h4 class="panel-title">
+        <button type="button" data-toggle="collapse" data-target="#collapse<%#= base.id %>" class="btn btn-primary btn-lg">拠点情報追加</button>
+      </h4>
+    </div>
+    <div id ="collapse<%#= user.id %>" class="panel-collapse collapse">
+      <div class="panel-body">
+        <%= form_with(model: @base, local: true) do |f| %>
+          <%= f.label "拠点番号", class: "label-base" %>
+          <%= f.number_field :base_num, class: "form-control" %>
+
+          <%= f.label "拠点名", class: "label-base" %>
+          <%= f.text_field :base_name, class: "form-control" %>
+
+          <%= f.label "勤怠種類", class: "label-base" %>
+          <br>
+          <%= f.select :base_type, [["出勤", "出勤"], ["退勤", "退勤"]], include_blank: "選択して下さい" , class: "form-control" %>
+          
+          <%= f.hidden_field :user_id, value:current_user.id %>
+
+          <%= f.submit "新規追加", class: "btn btn-primary btn-block btn-signup" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
