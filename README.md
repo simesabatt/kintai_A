@@ -45,3 +45,4 @@ $ bin/rails db:create db:migrate
 このあと
 rails db:seed
 をする
+
