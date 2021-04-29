@@ -20,6 +20,15 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    respond_to do |format|
+      format.html do
+          #html用の処理を書く
+      end 
+      format.csv do
+        send_data render_to_string, filename: "出退勤一覧.csv", type: :csv
+      end
+    end
   end
 
   def new
