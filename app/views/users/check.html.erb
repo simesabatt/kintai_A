@@ -23,33 +23,8 @@
       <td>締め：<%= l(@last_day, format: :short) %></td>
     </tr>
   </table>
-</div>
-<p>所属長承認申請のお知らせ</p>
-<p>勤怠変更申請のお知らせ</p>
-<% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
-  <div class="zangyou_oshirase font-weight-bold">
-<% elsif %>
-  <div>
-<% end %>
-  <p>
-    <% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
-    <%= link_to "残業申請のお知らせ　", edit_overwork_request_confirm_user_attendance_path(@user, @attendances), remote: true %>
-      <span class="box1">
-        <%= Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count %>件の通知があります。
-      </span>
-    <% else %>
-      残業申請のお知らせ　
-    <% end %>
-  </p>
-  </div>
-<div class="container">
-  <div class="row">
-      <%= link_to "勤怠編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
-      <%= link_to "CSV出力", user_path(format: :csv), class: "btn btn-primary" %>
-  </div>
-  <div class="row">
-    <%= link_to "勤怠修正ログ（承認済）", '#', class: "btn btn-primary" %>
-  </div>
+
+  <%= link_to "戻る", :back, class: "col-md-12 btn btn-primary" %>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead valign="bottom">
       <tr>
@@ -85,7 +60,7 @@
       <% @attendances.each do |day| %>
         <tr>
           <!--残業申請 拡張パラメータ-->
-          <td><%= link_to "残業申請", edit_overwork_request_user_attendance_path(@user, day), remote: true, class: "btn btn-primary" %></td>
+          <td></td>
           <!--日付-->
           <td><%= l(day.worked_on, format: :short) %></td>
           <!--曜日-->
@@ -108,9 +83,6 @@
           </td>
           <!--出勤ボタン表示-->
           <td>
-            <% if btn_text = attendance_attend(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-xs" %>
-            <% end %>
           </td>
           <!--退社：時-->
           <td>
@@ -155,21 +127,9 @@
           <!--指示者確認印-->
           <td>
             <% if day.superior_confirm == 2 %>
-              <% if day.over_work_allow == 1%>
-                <%= "上長1に残業申請中" %>
-              <% elsif day.over_work_allow == 2 %>
-                <%= "上長1により残業承認" %>
-              <% elsif day.over_work_allow == 3 %>
-                <%= "上長1により残業否認" %>
-              <% end %>
+              <%= "上長1に残業申請中" %>
             <% elsif day.superior_confirm == 3 %>
-              <% if day.over_work_allow == 1%>
-                <%= "上長2に残業申請中" %>
-              <% elsif day.over_work_allow == 2 %>
-                <%= "上長2により残業承認" %>
-              <% elsif day.over_work_allow == 3 %>
-                <%= "上長2により残業否認" %>
-              <% end %>
+              <%= "上長2に残業申請中" %>
             <% else %>
               <% "" %>
             <% end %>
@@ -190,13 +150,8 @@
         <td rowspan="2" colspan="1">
           <p>所属長承認　未</p>
             <form>
-              <p><select name="kibun">
-                <% @superiors.each do |superior| %>
-                  <option value="saikou"><%= superior.name %></option>
-                <% end %>
-              </select></p>
+              <p></p>
             </form>
-          <%= link_to "申請ボタン", '#', class: "btn btn-primary" %>
         </td>
       </tr>
       <tr>
@@ -207,8 +162,3 @@
     </tfoot>    
   </table>
 </div>
-
-<!--モーダルウインドウ表示-->
-<div id="edit_overwork_request_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-
-<div id="edit-overwork-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

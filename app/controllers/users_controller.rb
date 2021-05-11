@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :check]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :admin_or_correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info]
-  before_action :set_one_month, only: :show
+  before_action :set_one_month, only: [:show, :check]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -21,6 +21,7 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    @superiors = User.where(superior: true).where.not(id: params[:id])
     respond_to do |format|
       format.html do
           #html用の処理を書く
@@ -84,6 +85,20 @@ class UsersController < ApplicationController
 
   def employees_on_duty
     @users = User.all
+  end
+
+  def check
+    @worked_sum = @attendances.where.not(started_at: nil).count
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    @superiors = User.where(superior: true).where.not(id: params[:id])
+    respond_to do |format|
+      format.html do
+          #html用の処理を書く
+      end 
+      format.csv do
+        send_data render_to_string, filename: "出退勤一覧.csv", type: :csv
+      end
+    end
   end
 
   private

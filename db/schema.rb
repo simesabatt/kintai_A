@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210421115631) do
+ActiveRecord::Schema.define(version: 20210508120329) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20210421115631) do
     t.boolean "next_day"
     t.text "work_content"
     t.integer "superior_confirm"
+    t.integer "over_work_allow" # [["なし", 0], ["申請中", 1], ["承認", 2], ["否認", 3]]
+    t.boolean "over_work_allow_check" # 承認者が残業のチェックをしたか
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -46,11 +48,11 @@ ActiveRecord::Schema.define(version: 20210421115631) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_work_time", default: "2021-04-23 23:00:00"
-    t.datetime "work_time", default: "2021-04-23 22:30:00"
+    t.datetime "basic_work_time", default: "2021-05-07 23:00:00"
+    t.datetime "work_time", default: "2021-05-07 22:30:00"
     t.boolean "superior", default: false
-    t.datetime "designates_work_start_time", default: "2021-04-24 00:00:00"
-    t.datetime "designates_work_end_time", default: "2021-04-24 09:00:00"
+    t.datetime "designates_work_start_time", default: "2021-05-08 00:00:00"
+    t.datetime "designates_work_end_time", default: "2021-05-08 09:00:00"
     t.integer "employee_number"
     t.integer "uid"
     t.boolean "work_now"

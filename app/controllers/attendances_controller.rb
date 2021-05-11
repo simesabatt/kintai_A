@@ -58,11 +58,39 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     @user = User.find(params[:user_id])
     if @attendance.update_attributes(overwork_request_params)
+      @attendance.over_work_allow = 1 # 申請中フラグ
+      @attendance.over_work_allow_check = false
+      @attendance.save
       flash[:success] = "残業の申請に成功しました。"
     else
       flash[:danger] = "残業の申請に失敗しました。<br>" + @user.errors.full_messages.join("</br>")
     end
     redirect_to @user
+  end
+
+  def edit_overwork_request_confirm
+    @user = User.find(params[:user_id])
+    @attendances = Attendance.where(superior_confirm: @user.id, over_work_allow: 1).order(:user_id).group_by(&:user_id)
+  end
+
+  def update_overwork_request_confirm
+    @user = User.find(params[:user_id])
+    ActiveRecord::Base.transaction do # トランザクションを開始します。
+      overwork_allow_update.each do |id, item|
+        if item["over_work_allow_check"] == "true"
+          attendance = Attendance.find(id)
+          attendance.update_attributes!(item) # !は例外処理
+        else
+          attendance = Attendance.find(id)
+          attendance.save
+        end
+      end
+    end
+    flash[:success] = "残業申請を更新しました"
+    redirect_to user_url(@user, date: params[:date])
+  rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
+  flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+  redirect_to user_url(@user, date: params[:date])
   end
 
   private
@@ -84,6 +112,11 @@ class AttendancesController < ApplicationController
 
     # 残業申請モーダル
     def overwork_request_params
-      params.require(:attendance).permit(:overwork_request, :next_day, :work_content, :superior_confirm)
+      params.require(:attendance).permit(:overwork_request, :next_day, :work_content, :superior_confirm, :over_work_allow_check)
+    end
+
+    # 残業承認
+    def overwork_allow_update
+      params.permit(attends: [:over_work_allow, :over_work_allow_check])[:attends]
     end
 end

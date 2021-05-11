@@ -103,6 +103,11 @@ p {
   padding-top: 10%;
 }
 
+.modal-dialog-fluid {
+  max-width: inherit;
+  width: 80%;
+}
+
 /* 基本情報編集モーダルウインドウ */
 
 .label-basic-info {

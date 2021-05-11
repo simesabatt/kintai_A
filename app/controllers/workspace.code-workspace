@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "..\\.."
+		},
+		{
+			"path": "..\\..\\..\\..\\Desktop\\pythonBitcoin"
+		}
+	],
+	"settings": {
+		"python.pythonPath": "c:\\Users\\t9520\\Desktop\\pythonBitcoin\\env\\Scripts\\python.exe"
+	}
+}

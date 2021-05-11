@@ -87,6 +87,19 @@ th {
   text-align: center;
 }
 
+
+/* 残業申請のお知らせ */
+.zangyou_oshirase a {
+  text-decoration: none;
+  color: red;
+}
+
+.box1 {
+  display: inline;
+  font-weight: bold;
+  color: red;
+  border: solid 3px red;
+}
 // /* 曜日の色変更 */
 
 // .sat {
