@@ -25,7 +25,7 @@
   </table>
 </div>
 <p>所属長承認申請のお知らせ</p>
-<p>勤怠変更申請のお知らせ</p>
+<p>勤怠変更申請のお知らせ<%= link_to "残業申請のお知らせ　", edit_kintai_change_confirm_user_attendance_path(@user, @attendances), remote: true %></p>
 <% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
   <div class="zangyou_oshirase font-weight-bold">
 <% elsif %>
@@ -209,6 +209,8 @@
 </div>
 
 <!--モーダルウインドウ表示-->
+<div id="edit_kintai_change_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
 <div id="edit_overwork_request_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 <div id="edit-overwork-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

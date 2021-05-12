@@ -93,6 +93,12 @@ class AttendancesController < ApplicationController
   redirect_to user_url(@user, date: params[:date])
   end
 
+  def edit_kintai_change_confirm
+  end
+
+  def update_kintai_change_confirm
+  end
+
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params

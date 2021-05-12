@@ -1,0 +1,91 @@
+<%# provide(:button_text, '更新') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center modal-dialog-fluid">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h1 class="modal-title">勤怠変更承認画面</h1>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <%#= form_with(url:update_overwork_request_confirm_user_attendance_path(@user), local: true, method: :patch) do |f| %>
+            <%# @attendances.each do |id, attend| %>
+              
+                <h3 class="text-center">
+                  【
+                  <%#= User.find(id).name %>
+                  からの残業申請】
+                </h3>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>日付</th>
+                        <th>曜日</th>
+                        <th>終了予定時間</th>
+                        <th>指定勤務終了時間</th>
+                        <th>時間外時間</th>
+                        <th>業務処理内容</th>
+                        <th>指示者確認印</th>
+                        <th>変更</th>
+                        <th>勤怠を確認する</th>
+                      </tr>
+                    </thead>
+                    <%# attend.each do |at| %>
+                      <%#= fields_for "attends[]", at do |fa| %>
+                        <tbody>
+                          <tr>
+                            <!-- 日付 -->
+                            <th><%#= l(at.worked_on, format: :short) %></th>
+                            <!-- 曜日 -->
+                            <th><%#= $days_of_the_week[at.worked_on.wday] %></th>
+                            <!-- 終了予定時間 -->
+                            <th><%#= at.overwork_request.strftime("%H:%M") %></th>
+                            <!-- 指定勤務終了時間 -->
+                            <th><%#= User.find_by(id: at.user_id).designates_work_end_time.strftime("%H:%M") %></th>
+                            <!-- 時間外時間 -->
+                            <th>
+                              <%# if at.next_day == true %>
+                                <%#= jikangai = hour_2f(int_time(at.overwork_request) - int_time(User.find_by(id: at.user_id).designates_work_end_time) + 24 * 60) %>
+                                hr
+                              <%# else %>
+                                <%#= jikangai = hour_2f(int_time(at.overwork_request) - int_time(User.find_by(id: at.user_id).designates_work_end_time)) %>
+                                hr
+                              <%# end %>
+                            </th>
+                            <!-- 業務処理内容 -->
+                            <th><%#= at.work_content %></th>
+                            <!-- 指示者確認印 -->
+                            <th>
+                              <%#= fa.select :over_work_allow, [["なし", 0], ["申請中", 1], ["承認", 2], ["否認", 3]] %>
+                            </th>
+                            <!-- 変更 -->
+                            <th><%#= fa.check_box :over_work_allow_check, {checked: false}, "true", "false" %></th>
+
+                            <!-- 勤怠を確認する -->
+                            <th>
+                              <%#= link_to "確認", "/users/" + at.user_id.to_s + "/users/check", method: :get, class: "btn btn-md btn-primary" %>
+                            </th>
+                          </tr>
+                        </tbody>
+                      <%# end %>
+                    <%# end %>
+                  </table>
+                <br>
+              <%# end %>
+            <%# end %>
+
+            <div class="center">
+            <%#= f.submit "申請する", class: "btn btn-primary btn-default" %>
+              <button type="button" class="btn btn-default %>" data-dismiss="modal">
+                  キャンセル
+              </button> 
+            </div>
+          <%# end %>
+        </div>        
+      </div>
+    </div>
+  </div>
+</div>

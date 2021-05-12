@@ -46,3 +46,9 @@ $ bin/rails db:create db:migrate
 rails db:seed
 をする
 
+t.integer "superior_confirm"        # 残業被申請者id
+t.integer "over_work_allow"         # 残業許可ステータス0:なし 1:申請中 2:承認 3:否認
+t.boolean "over_work_allow_check"   # 残業申請フラグ
+t.integer "kintai_change_confirm"   # 勤怠被申請者id
+t.integer "kintai_change_allow"     # 勤怠許可ステータス0:なし 1:申請中 2:承認 3:否認
+t.boolean "kintai_change_allow_check" # 勤怠申請フラグ
