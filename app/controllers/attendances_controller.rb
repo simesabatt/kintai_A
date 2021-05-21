@@ -34,8 +34,16 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(item) # !は例外処理
+        if item["kintai_change_confirm"].present?
+            if item["request_next_day"] == "true"
+              item["request_finish_at"] = (item["request_finish_at"].to_time + 60 * 60 * 24).to_s
+              #.to_time.strftime("%T.%L") 
+            end
+          attendance = Attendance.find(id)
+          item[:kintai_change_allow] = 1 # 申請中フラグ
+          attendance.kintai_change_allow_check = false
+          attendance.update_attributes!(item) # !は例外処理
+        end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
@@ -94,18 +102,52 @@ class AttendancesController < ApplicationController
   end
 
   def edit_kintai_change_confirm
+    @user = User.find(params[:user_id])
+    @attendances = Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).order(:user_id).group_by(&:user_id)
   end
 
   def update_kintai_change_confirm
+    @user = User.find(params[:user_id])
+    ActiveRecord::Base.transaction do # トランザクションを開始します。
+      change_allow_update.each do |id, item|
+        if item["kintai_change_allow_check"] == "true" 
+          if item["kintai_change_allow"] == "2" # 承認
+            attendance = Attendance.find(id)
+            attendance.started_at = attendance.request_start_at
+            attendance.finished_at = attendance.request_finish_at
+            attendance.update_attributes!(item)
+          elsif item["kintai_change_allow"] == "3" # 否認
+            attendance = Attendance.find(id)
+            attendance.update_attributes!(item)
+          else
+          end
+        else
+          item["kintai_change_allow_check"] == "false"
+          attendance = Attendance.find(id)
+          attendance.save
+        end
+      end
+    end
+    flash[:success] = "残業申請を更新しました"
+    redirect_to user_url(@user, date: params[:date])
+    rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
+    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+    redirect_to user_url(@user, date: params[:date])
+  end
+
+  def edit_month_change_confirm
+  end
+
+  def update_month_change_confirm
   end
 
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+      params.permit(attendances: [:started_at, :finished_at, :note, :kintai_change_confirm, :kintai_change_allow, :kintai_change_allow_check, :request_start_at, :request_finish_at, :request_next_day])[:attendances]
     end
 
-      # beforeフィルター
+    # beforeフィルター
 
     # 管理権限者、または現在ログインしているユーザーを許可します。
     def admin_or_correct_user
@@ -124,5 +166,10 @@ class AttendancesController < ApplicationController
     # 残業承認
     def overwork_allow_update
       params.permit(attends: [:over_work_allow, :over_work_allow_check])[:attends]
+    end
+
+    # 勤怠変更承認
+    def change_allow_update
+      params.permit(attends: [:started_at, :finished_at, :request_start_at, :request_finish_at, :kintai_change_allow_check, :kintai_change_allow])[:attends]
     end
 end

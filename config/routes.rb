@@ -29,6 +29,8 @@ Rails.application.routes.draw do
         patch 'update_overwork_request_confirm'
         get 'edit_kintai_change_confirm'
         patch 'update_kintai_change_confirm'
+        get 'edit_month_change_confirm'
+        patch 'update_month_change_confirm'
       end
     end
     # resources :bases do

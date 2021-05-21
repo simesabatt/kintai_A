@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210512143032) do
+ActiveRecord::Schema.define(version: 20210518140812) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -29,6 +29,12 @@ ActiveRecord::Schema.define(version: 20210512143032) do
     t.integer "kintai_change_confirm"
     t.integer "kintai_change_allow"
     t.boolean "kintai_change_allow_check"
+    t.integer "kintai_month_confirm"
+    t.integer "kintai_month_allow"
+    t.boolean "kintai_month_allow_check"
+    t.datetime "request_start_at"
+    t.datetime "request_finish_at"
+    t.boolean "request_next_day"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -51,11 +57,11 @@ ActiveRecord::Schema.define(version: 20210512143032) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_work_time", default: "2021-05-11 23:00:00"
-    t.datetime "work_time", default: "2021-05-11 22:30:00"
+    t.datetime "basic_work_time", default: "2021-05-21 23:00:00"
+    t.datetime "work_time", default: "2021-05-21 22:30:00"
     t.boolean "superior", default: false
-    t.datetime "designates_work_start_time", default: "2021-05-12 00:00:00"
-    t.datetime "designates_work_end_time", default: "2021-05-12 09:00:00"
+    t.datetime "designates_work_start_time", default: "2021-05-22 00:00:00"
+    t.datetime "designates_work_end_time", default: "2021-05-22 09:00:00"
     t.integer "employee_number"
     t.integer "uid"
     t.boolean "work_now"

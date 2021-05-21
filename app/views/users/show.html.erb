@@ -25,7 +25,40 @@
   </table>
 </div>
 <p>所属長承認申請のお知らせ</p>
-<p>勤怠変更申請のお知らせ<%= link_to "残業申請のお知らせ　", edit_kintai_change_confirm_user_attendance_path(@user, @attendances), remote: true %></p>
+
+<% if Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count >= 1 %>
+  <div class="zangyou_oshirase font-weight-bold">
+<% elsif %>
+  <div>
+<% end %>
+  <p>
+    <% if Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count >= 1 %>
+      <%= link_to "所属長承認申請のお知らせ　", edit_month_change_confirm_user_attendance_path(@user, @attendances), remote: true %>
+        <span class="box1">
+          <%= Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count %>件の通知があります。
+        </span>
+    <% else %>
+      所属長承認申請のお知らせ　
+    <% end %>
+  </p>
+
+<% if Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count >= 1 %>
+  <div class="zangyou_oshirase font-weight-bold">
+<% elsif %>
+  <div>
+<% end %>
+  <p>
+    <% if Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count >= 1 %>
+      <%= link_to "勤怠変更申請のお知らせ　", edit_kintai_change_confirm_user_attendance_path(@user, @attendances), remote: true %>
+        <span class="box1">
+          <%= Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count %>件の通知があります。
+        </span>
+    <% else %>
+      勤怠変更申請のお知らせ　
+    <% end %>
+  </p>
+  </div>
+
 <% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
   <div class="zangyou_oshirase font-weight-bold">
 <% elsif %>
@@ -52,6 +85,7 @@
   </div>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead valign="bottom">
+      <!--rowspan:縦結合、colspan：横結合-->
       <tr>
         <td valign="baseline" rowspan="3" class="td-bottom" >　<br>残業時間</td>
         <td valign="bottom" rowspan="3" class="td-bottom" >　<br>日付</td>
@@ -154,6 +188,26 @@
           <td><%= day.work_content %></td>
           <!--指示者確認印-->
           <td>
+            <% if day.kintai_change_confirm== 2 %>
+              <% if day.kintai_change_allow == 1%>
+                <%= "上長1に勤怠変更申請中" %>
+              <% elsif day.kintai_change_allow == 2 %>
+                <%= "上長1により勤怠変更承認" %>
+              <% elsif day.kintai_change_allow == 3 %>
+                <%= "上長1により勤怠変更否認" %>
+              <% end %>
+            <% elsif day.kintai_change_confirm == 3 %>
+              <% if day.kintai_change_allow== 1%>
+                <%= "上長2に勤怠変更申請中" %>
+              <% elsif day.kintai_change_allow== 2 %>
+                <%= "上長2により勤怠変更承認" %>
+              <% elsif day.kintai_change_allow == 3 %>
+                <%= "上長2により勤怠変更否認" %>
+              <% end %>
+            <% else %>
+              <% "" %>
+            <% end %>
+          <br>
             <% if day.superior_confirm == 2 %>
               <% if day.over_work_allow == 1%>
                 <%= "上長1に残業申請中" %>
@@ -173,7 +227,6 @@
             <% else %>
               <% "" %>
             <% end %>
-          <%#= day.superior_confirm %>
           </td>
         </tr>
       <% end %>
@@ -209,6 +262,8 @@
 </div>
 
 <!--モーダルウインドウ表示-->
+<div id="edit_kintai_month_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
 <div id="edit_kintai_change_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 <div id="edit_overwork_request_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

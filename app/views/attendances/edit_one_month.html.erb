@@ -1,5 +1,5 @@
 <% provide(:title, @user.name) %>
-<%= form_with(model: @user, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %>
+<%= form_with(model: @attendance, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %>
   <div>
     <h1>勤怠編集画面</h1>
     <table class="table table-bordered table-condensed table-hover" id="table-attendances">
@@ -33,20 +33,23 @@
               </td>
               <% if !current_user.admin? && (Date.current < day.worked_on) %>
               <!--出勤時間-->
-                <td><%= attendance.time_field :started_at, readonly: true, class: "form-control" %></td>
+                <td><%= attendance.time_field :request_start_at, readonly: true, class: "form-control" %></td>
               <!--退勤時間-->
-                <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
+                <td><%= attendance.time_field :request_finish_at, readonly: true, class: "form-control" %></td>
               <% else %>
               <!--出勤時間-->
-                <td><%= attendance.time_field :started_at, class: "form-control" %></td>
+                <td><%= attendance.time_field :request_start_at, class: "form-control" %></td>
               <!--退勤時間-->
-                <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
+                <td><%= attendance.time_field :request_finish_at, class: "form-control" %></td>
               <% end %>
               <!--翌日-->
               <td>
+              <!--
                 <form action="cgi-bin/abc.cgi" method="post">
                   <input type="checkbox" name="tommorow" value="1" >
                 </form>
+              -->
+                <%= attendance.check_box :request_next_day, {}, "true", "false" %>
               </td>
               <!--在社時間-->
               <td>
@@ -58,12 +61,10 @@
               <td><%= attendance.text_field :note, class: "form-control" %></td>
               <!--指示者確認印-->
               <td>
-                <select name="example">
-                  <option value="選択肢1">上長を選択してください</option>
-                  <option value="選択肢2">選択肢2</option>
-                  <option value="選択肢3">選択肢3</option>
-                </select>
+                <%= attendance.collection_select :kintai_change_confirm, User.where(superior: true).where.not(id: day.user_id), :id, :name, {include_blank: true}, class: "form-control" %>
               </td>
+              <%= attendance.hidden_field :kintai_change_allow, value: false %>
+              <%= attendance.hidden_field :kintai_change_allow_check, value: false %>
             </tr>
           <% end %>
         <% end %>
