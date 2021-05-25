@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
       get 'users/check'
+      patch 'update_month_request'
     end
     resources :attendances, only: :update do
       member do

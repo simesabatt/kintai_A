@@ -24,8 +24,6 @@
     </tr>
   </table>
 </div>
-<p>所属長承認申請のお知らせ</p>
-
 <% if Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count >= 1 %>
   <div class="zangyou_oshirase font-weight-bold">
 <% elsif %>
@@ -41,6 +39,7 @@
       所属長承認申請のお知らせ　
     <% end %>
   </p>
+  </div>
 
 <% if Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count >= 1 %>
   <div class="zangyou_oshirase font-weight-bold">
@@ -132,28 +131,51 @@
               <%= $days_of_the_week[day.worked_on.wday] %>
               </div>
           </td>
-          <!--出社：時-->
-          <td>
-            <%= l(day.started_at, format: :hour) if day.started_at.present? %>
-          </td>
-          <!--出社：分-->
-          <td>
-            <%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %>
-          </td>
+          <% if day.kintai_change_allow == 2 %>
+            <!--出社：時-->
+            <td>
+              <%= l(day.request_start_at, format: :hour) if day.request_start_at.present? %>
+            </td>
+            <!--出社：分-->
+            <td>
+              <%= l(day.request_start_at.floor_to(15.minutes), format: :minute) if day.request_start_at.present? %>
+            </td>
+          <% else %>
+            <!--出社：時-->
+            <td>
+              <%= l(day.started_at, format: :hour) if day.started_at.present? %>
+            </td>
+            <!--出社：分-->
+            <td>
+              <%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %>
+            </td>
+          <% end %>
+
           <!--出勤ボタン表示-->
           <td>
             <% if btn_text = attendance_attend(day) %>
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-xs" %>
             <% end %>
           </td>
-          <!--退社：時-->
-          <td>
-            <%= l(day.finished_at, format: :hour) if day.finished_at.present? %>
-          </td>
-          <!--退社：分-->
-          <td>
-            <%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %>
-          </td>
+          <% if day.kintai_change_allow == 2 %>
+            <!--退社：時-->
+            <td>
+              <%= l(day.request_finish_at, format: :hour) if day.request_finish_at.present? %>
+            </td>
+            <!--退社：分-->
+            <td>
+              <%= l(day.request_finish_at.floor_to(15.minutes), format: :minute) if day.request_finish_at.present? %>
+            </td>
+          <% elsif %>
+            <!--退社：時-->
+            <td>
+              <%= l(day.finished_at, format: :hour) if day.finished_at.present? %>
+            </td>
+            <!--退社：分-->
+            <td>
+              <%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %>
+            </td>
+          <% end %>
           <!--退社ボタン表示-->
           <td>
              <% if btn_text = attendance_leave(day) %>
@@ -241,15 +263,28 @@
         <td colspan="1">累計在社時間</td>
         <td rowspan="2" colspan="5"></td>
         <td rowspan="2" colspan="1">
-          <p>所属長承認　未</p>
-            <form>
-              <p><select name="kibun">
-                <% @superiors.each do |superior| %>
-                  <option value="saikou"><%= superior.name %></option>
-                <% end %>
-              </select></p>
-            </form>
-          <%= link_to "申請ボタン", '#', class: "btn btn-primary" %>
+        <%# debugger %>
+          <%= form_with(model: @attendances, url: update_month_request_user_path(@user, @attendances), local: true, method: :patch) do |f| %>
+            <p><%= l(@first_day, format: :middle) %></p>
+            <p>
+              所属長
+              <% if @allow == 1 %>
+                承認　申請中
+              <% elsif @allow == 2 %>
+                　承認
+              <% elsif @allow ==3 %>
+                　否認
+              <% else %>
+                未
+              <% end %>
+            </p>
+            <p>
+              <%= f.collection_select :kintai_month_confirm, User.where(superior: true).where.not(id: params[:id]), :id, :name, {include_blank: true}, class: "form-control", required: true %>
+            </p>
+              <%= f.submit "申請ボタン", class: "btn btn-primary btn-default" %>
+              <%= f.hidden_field :month, value: @first_day %>
+              <%= f.hidden_field :month_count, value: @attendances.count %>
+          <% end %>
         </td>
       </tr>
       <tr>
@@ -262,7 +297,7 @@
 </div>
 
 <!--モーダルウインドウ表示-->
-<div id="edit_kintai_month_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_month_change_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 <div id="edit_kintai_change_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
