@@ -21,6 +21,8 @@ Rails.application.routes.draw do
       patch 'attendances/update_one_month'
       get 'users/check'
       patch 'update_month_request'
+      get 'kintai_log'
+      patch 'update_kintai_log'
     end
     resources :attendances, only: :update do
       member do

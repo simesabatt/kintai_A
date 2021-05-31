@@ -80,7 +80,7 @@
       <%= link_to "CSV出力", user_path(format: :csv), class: "btn btn-primary" %>
   </div>
   <div class="row">
-    <%= link_to "勤怠修正ログ（承認済）", '#', class: "btn btn-primary" %>
+    <%= link_to "勤怠修正ログ（承認済）", kintai_log_user_path(@user, @attendances), remote: true, class: "btn btn-primary" %>
   </div>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead valign="bottom">
@@ -297,6 +297,8 @@
 </div>
 
 <!--モーダルウインドウ表示-->
+<div id="kintai_log" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
 <div id="edit_month_change_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 <div id="edit_kintai_change_confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

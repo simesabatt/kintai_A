@@ -116,6 +116,24 @@ class UsersController < ApplicationController
     end
   end
 
+  def kintai_log
+    if params["log_date(1i)"].nil?
+      search_date = Date.current.beginning_of_month      
+    else
+      date = params["log_date(1i)"].to_s + '-' + "%02d" % params["log_date(2i)"].to_s + '-01'
+      search_date = Date.parse(date).beginning_of_month 
+    end
+    @attendances = Attendance.where(user_id: params[:id]).where(kintai_change_allow: 2).where(worked_on: search_date.in_time_zone.all_month)
+    # debugger
+    # redirect_to kintai_log_user_path(@attendances)
+  end
+
+  def update_kintai_log
+    @attendances = Attendance.where(user_id: params[:id]).where(kintai_change_allow: 2)
+    redirect_to kintai_log_user_path(@user)
+    #render partial: "kintai_log"
+  end
+
   private
 
     def user_params
