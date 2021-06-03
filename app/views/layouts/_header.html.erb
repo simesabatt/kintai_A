@@ -5,12 +5,12 @@
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "ホーム", root_path %></li>
         <% if logged_in? %>
-          <%#管理者画面完成したら活かす if current_user.admin? && !current_user?(@user) %>
+          <% if current_user.admin? %>
             <li><%= link_to "ユーザー一覧", users_path %></li>
             <li><%= link_to "出社社員一覧", users_employees_on_duty_path %></li>
-            <li><%= link_to "基本情報の修正", "#" %></li>
+            <li><%= link_to "基本情報の修正", users_basic_info_path %></li>
             <li><%= link_to "拠点情報の修正", bases_path %></li>
-          <%#管理者画面完成したら活かす end %>
+          <% end %>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 メニュー <b class="caret"></b>

@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
     # アクセスしたユーザーが現在ログインしているユーザーか確認します。
     def admin_or_correct_user
       unless @user.admin? || current_user?(@user)
+        flash[:danger] = "ユーザーの異なるページはご覧頂けません"
         redirect_to(root_url)
       end
     end

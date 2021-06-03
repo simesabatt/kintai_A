@@ -24,56 +24,58 @@
     </tr>
   </table>
 </div>
-<% if Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count >= 1 %>
-  <div class="zangyou_oshirase font-weight-bold">
-<% elsif %>
-  <div>
-<% end %>
-  <p>
-    <% if Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count >= 1 %>
-      <%= link_to "所属長承認申請のお知らせ　", edit_month_change_confirm_user_attendance_path(@user, @attendances), remote: true %>
-        <span class="box1">
-          <%= Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count %>件の通知があります。
-        </span>
-    <% else %>
-      所属長承認申請のお知らせ　
-    <% end %>
-  </p>
-  </div>
+<% if current_user.superior? && current_user?(@user) %>
+  <% if Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count >= 1 %>
+    <div class="zangyou_oshirase font-weight-bold">
+  <% elsif %>
+    <div>
+  <% end %>
+    <p>
+      <% if Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count >= 1 %>
+        <%= link_to "所属長承認申請のお知らせ　", edit_month_change_confirm_user_attendance_path(@user, @attendances), remote: true %>
+          <span class="box1">
+            <%= Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).count %>件の通知があります。
+          </span>
+      <% else %>
+        所属長承認申請のお知らせ　
+      <% end %>
+    </p>
+    </div>
 
-<% if Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count >= 1 %>
-  <div class="zangyou_oshirase font-weight-bold">
-<% elsif %>
-  <div>
-<% end %>
-  <p>
-    <% if Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count >= 1 %>
-      <%= link_to "勤怠変更申請のお知らせ　", edit_kintai_change_confirm_user_attendance_path(@user, @attendances), remote: true %>
-        <span class="box1">
-          <%= Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count %>件の通知があります。
-        </span>
-    <% else %>
-      勤怠変更申請のお知らせ　
-    <% end %>
-  </p>
-  </div>
+  <% if Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count >= 1 %>
+    <div class="zangyou_oshirase font-weight-bold">
+  <% elsif %>
+    <div>
+  <% end %>
+    <p>
+      <% if Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count >= 1 %>
+        <%= link_to "勤怠変更申請のお知らせ　", edit_kintai_change_confirm_user_attendance_path(@user, @attendances), remote: true %>
+          <span class="box1">
+            <%= Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).count %>件の通知があります。
+          </span>
+      <% else %>
+        勤怠変更申請のお知らせ　
+      <% end %>
+    </p>
+    </div>
 
-<% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
-  <div class="zangyou_oshirase font-weight-bold">
-<% elsif %>
-  <div>
+  <% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
+    <div class="zangyou_oshirase font-weight-bold">
+  <% elsif %>
+    <div>
+  <% end %>
+    <p>
+      <% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
+      <%= link_to "残業申請のお知らせ　", edit_overwork_request_confirm_user_attendance_path(@user, @attendances), remote: true %>
+        <span class="box1">
+          <%= Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count %>件の通知があります。
+        </span>
+      <% else %>
+        残業申請のお知らせ　
+      <% end %>
+    </p>
+    </div>
 <% end %>
-  <p>
-    <% if Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count >= 1 %>
-    <%= link_to "残業申請のお知らせ　", edit_overwork_request_confirm_user_attendance_path(@user, @attendances), remote: true %>
-      <span class="box1">
-        <%= Attendance.where(superior_confirm: @user.id, over_work_allow: 1).count %>件の通知があります。
-      </span>
-    <% else %>
-      残業申請のお知らせ　
-    <% end %>
-  </p>
-  </div>
 <div class="container">
   <div class="row">
       <%= link_to "勤怠編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>

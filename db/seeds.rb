@@ -12,7 +12,7 @@ User.create!(name: "上長1",
   email: "sample1@email.com",
   password: "password",
   password_confirmation: "password",
-  admin: true,
+  admin: false,
   superior: true,
   work_now: false)
   
@@ -20,7 +20,7 @@ User.create!(name: "上長2",
   email: "sample2@email.com",
   password: "password",
   password_confirmation: "password",
-  admin: true,
+  admin: false,
   superior: true,
   work_now: false)
 

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   
   get 'bases/new'
   resources :bases
+  get 'users/basic_info'
 
   resources :users do
     collection { post :import }
