@@ -1,4 +1,5 @@
 <%= form_with(model: user, local:true) do |f| %>
+<%#= form_with(model: @user, url: update_basic_info_user_path(@user), local: true, method: :patch) do |f| %>
   <%= render 'shared/error_messages', object: user %>
 
   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
@@ -27,10 +28,12 @@
 
   <%= f.label :designates_work_end_time, class: "label-#{yield(:class_text)}" %>
   <%= f.time_field :designates_work_end_time, class: "form-control" %>
-
+  
+  <%= f.hidden_field :admin, value:current_user.id %>
+  
   <div class="center">
     <%= f.submit "更 新", class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
-    <% link_to :back do %>
+      <% link_to :back do %>
       <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>">
         キャンセル
       </button>
