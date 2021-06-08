@@ -65,6 +65,14 @@ class AttendancesController < ApplicationController
   def update_overwork_request
     @attendance = Attendance.find(params[:id])
     @user = User.find(params[:user_id])
+    if params[:attendance][:next_day] == "true"
+      params[:attendance]["overwork_request(3i)"] = (params[:attendance]["overwork_request(3i)"].to_i+1).to_s
+    else
+      if params[:attendance]["overwork_request(4i)"].to_i*60 + params[:attendance]["overwork_request(5i)"].to_i < User.find(params[:user_id]).designates_work_end_time.hour * 60 + User.find(params[:user_id]).designates_work_end_time.min
+        flash[:danger] = "残業は指定勤務終了時間より後の時間で設定してください。<br>" + @user.errors.full_messages.join("</br>")
+        redirect_to @user and return
+      end
+    end
     if @attendance.update_attributes(overwork_request_params)
       @attendance.over_work_allow = 1 # 申請中フラグ
       @attendance.over_work_allow_check = false
