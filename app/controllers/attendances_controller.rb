@@ -36,7 +36,9 @@ class AttendancesController < ApplicationController
       attendances_params.each do |id, item|
         if item["kintai_change_confirm"].present?
             if item["request_next_day"] == "true"
-              item["request_finish_at"] = (item["request_finish_at"].to_time + 60 * 60 * 24).to_s
+            #  debugger
+            #   item["request_finish_at"] = (item["request_finish_at"].to_time + 60 * 60 * 24).to_s
+            #   debugger 
               #.to_time.strftime("%T.%L") 
             end
           attendance = Attendance.find(id)
