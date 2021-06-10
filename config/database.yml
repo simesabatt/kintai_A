@@ -21,14 +21,6 @@ test:
   database: db/test.sqlite3
 
 production:
-<<<<<<< HEAD
-  #半角スペース２個分の空白を開ける
-=======
-  # <<: *default
-  # adapter: postgresql
-  # encoding: unicode
-  # pool: 5
->>>>>>> master
   <<: *default
   adapter: postgresql
   encoding: unicode

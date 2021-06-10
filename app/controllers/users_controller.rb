@@ -24,14 +24,12 @@ class UsersController < ApplicationController
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @superiors = User.where(superior: true).where.not(id: params[:id])
     @allow = Attendance.where(user_id: params[:id]).where(worked_on: @first_day)[0].kintai_month_allow
-    respond_to do |format|
-      format.html do
-          #html用の処理を書く
-      end 
-      format.csv do
-        send_data render_to_string, filename: "出退勤一覧.csv", type: :csv
+      respond_to do |format|
+        format.html
+        format.csv do
+          attendance_csv
+        end
       end
-    end
   end
 
   def new
@@ -96,14 +94,6 @@ class UsersController < ApplicationController
     @worked_sum = @attendances.where.not(started_at: nil).count
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @superiors = User.where(superior: true).where.not(id: params[:id])
-    respond_to do |format|
-      format.html do
-          #html用の処理を書く
-      end 
-      format.csv do
-        send_data render_to_string, filename: "出退勤一覧.csv", type: :csv
-      end
-    end
   end
 
   def update_month_request
@@ -139,6 +129,22 @@ class UsersController < ApplicationController
   end
 
   private
+
+    def attendance_csv
+      csv_data = CSV.generate do |csv|
+        csv_column_names = ["日付", "出社時間", "退勤時間"]
+        csv << csv_column_names
+          @attendances.each do |attendance|
+          csv_column_values = [
+            attendance.worked_on,
+            attendance&.started_at&.strftime("%R"),
+            attendance&.finished_at&.strftime("%R"),
+          ]
+          csv << csv_column_values
+          end
+      end
+      send_data(csv_data,filename:"出退勤一覧.csv")
+    end
 
     def user_params
       params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation, :employee_number, :uid, :basic_work_time, :designates_work_start_time, :designates_work_end_time)
