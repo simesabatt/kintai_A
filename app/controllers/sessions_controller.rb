@@ -7,6 +7,9 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
       log_in user
+      if user.admin?
+        redirect_to root_path and return
+      end
       # 三項演算子
       # [条件式] ? [真（true）の場合実行される処理] : [偽（false）の場合実行される処理]
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
