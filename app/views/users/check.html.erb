@@ -27,6 +27,7 @@
   <%= link_to "戻る", :back, class: "col-md-12 btn btn-primary" %>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead valign="bottom">
+      <!--rowspan:縦結合、colspan：横結合-->
       <tr>
         <td valign="baseline" rowspan="3" class="td-bottom" >　<br>残業時間</td>
         <td valign="bottom" rowspan="3" class="td-bottom" >　<br>日付</td>
@@ -73,35 +74,37 @@
               <%= $days_of_the_week[day.worked_on.wday] %>
               </div>
           </td>
-          <!--出社：時-->
-          <td>
-            <%= l(day.started_at, format: :hour) if day.started_at.present? %>
-          </td>
-          <!--出社：分-->
-          <td>
-            <%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %>
-          </td>
+            <!--出社：時-->
+            <td>
+              <%= l(day.started_at, format: :hour) if day.started_at.present? %>
+            </td>
+            <!--出社：分-->
+            <td>
+              <%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %>
+            </td>
+
           <!--出勤ボタン表示-->
           <td>
           </td>
-          <!--退社：時-->
-          <td>
-            <%= l(day.finished_at, format: :hour) if day.finished_at.present? %>
-          </td>
-          <!--退社：分-->
-          <td>
-            <%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %>
-          </td>
+            <!--退社：時-->
+            <td>
+              <%= l(day.finished_at, format: :hour) if day.finished_at.present? %>
+            </td>
+            <!--退社：分-->
+            <td>
+              <%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %>
+            </td>
           <!--退社ボタン表示-->
           <td>
-             <% if btn_text = attendance_leave(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-xs" %>
-            <% end %>
           </td>
           <!--在社時間-->
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% if day.next_day == true %>
+                <%= str_times = working_times(day.started_at.floor_to(15.minutes), (day.finished_at + 24 * 60 * 60).floor_to(15.minutes)) %>
+              <% else %>
+                <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% end %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
@@ -126,14 +129,45 @@
           <td><%= day.work_content %></td>
           <!--指示者確認印-->
           <td>
-            <% if day.superior_confirm == 2 %>
-              <%= "上長1に残業申請中" %>
-            <% elsif day.superior_confirm == 3 %>
-              <%= "上長2に残業申請中" %>
+            <% if day.kintai_change_confirm== 2 %>
+              <% if day.kintai_change_allow == 1%>
+                <%= "上長1に勤怠変更申請中" %>
+              <% elsif day.kintai_change_allow == 2 %>
+                <%= "上長1により勤怠変更承認" %>
+              <% elsif day.kintai_change_allow == 3 %>
+                <%= "上長1により勤怠変更否認" %>
+              <% end %>
+            <% elsif day.kintai_change_confirm == 3 %>
+              <% if day.kintai_change_allow== 1%>
+                <%= "上長2に勤怠変更申請中" %>
+              <% elsif day.kintai_change_allow== 2 %>
+                <%= "上長2により勤怠変更承認" %>
+              <% elsif day.kintai_change_allow == 3 %>
+                <%= "上長2により勤怠変更否認" %>
+              <% end %>
             <% else %>
               <% "" %>
             <% end %>
-          <%#= day.superior_confirm %>
+          <br>
+            <% if day.superior_confirm == 2 %>
+              <% if day.over_work_allow == 1%>
+                <%= "上長1に残業申請中" %>
+              <% elsif day.over_work_allow == 2 %>
+                <%= "上長1により残業承認" %>
+              <% elsif day.over_work_allow == 3 %>
+                <%= "上長1により残業否認" %>
+              <% end %>
+            <% elsif day.superior_confirm == 3 %>
+              <% if day.over_work_allow == 1%>
+                <%= "上長2に残業申請中" %>
+              <% elsif day.over_work_allow == 2 %>
+                <%= "上長2により残業承認" %>
+              <% elsif day.over_work_allow == 3 %>
+                <%= "上長2により残業否認" %>
+              <% end %>
+            <% else %>
+              <% "" %>
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -148,10 +182,27 @@
         <td colspan="1">累計在社時間</td>
         <td rowspan="2" colspan="5"></td>
         <td rowspan="2" colspan="1">
-          <p>所属長承認　未</p>
-            <form>
-              <p></p>
-            </form>
+        <%# debugger %>
+          <%= form_with(model: @attendances, url: update_month_request_user_path(@user, @attendances), local: true, method: :patch) do |f| %>
+            <p><%= l(@first_day, format: :middle) %></p>
+            <p>
+              所属長
+              <% if @allow == 1 %>
+                承認　申請中
+              <% elsif @allow == 2 %>
+                　承認
+              <% elsif @allow ==3 %>
+                　否認
+              <% else %>
+                未
+              <% end %>
+            </p>
+            <p>
+              <%= f.collection_select :kintai_month_confirm, User.where(superior: true).where.not(id: params[:id]), :id, :name, {include_blank: true}, class: "form-control", required: true %>
+            </p>
+              <%= f.hidden_field :month, value: @first_day %>
+              <%= f.hidden_field :month_count, value: @attendances.count %>
+          <% end %>
         </td>
       </tr>
       <tr>

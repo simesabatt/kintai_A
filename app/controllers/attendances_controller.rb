@@ -123,6 +123,9 @@ class AttendancesController < ApplicationController
         if item["kintai_change_allow_check"] == "true" 
           if item["kintai_change_allow"] == "2" # 承認
             attendance = Attendance.find(id)
+            attendance.update_attributes(before_start_at: Attendance.find(id).started_at,
+                                         before_finish_at: Attendance.find(id).finished_at, started_at: Attendance.find(id).request_start_at, finished_at: Attendance.find(id).request_finish_at,
+                                         next_day: Attendance.find(id).request_next_day)
             attendance.update_attributes!(item)
           elsif item["kintai_change_allow"] == "3" # 否認
             attendance = Attendance.find(id)
@@ -204,7 +207,7 @@ class AttendancesController < ApplicationController
 
     # 勤怠変更承認
     def change_allow_update
-      params.permit(attends: [:started_at, :finished_at, :request_start_at, :request_finish_at, :kintai_change_allow_check, :kintai_change_allow])[:attends]
+      params.permit(attends: [:started_at, :finished_at, :request_start_at, :request_finish_at, :kintai_change_allow_check, :kintai_change_allow, :before_start_at, :before_finish_at, :before_next_day])[:attends]
     end
 
     # 1ヶ月の勤怠申請承認

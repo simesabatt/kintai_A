@@ -30,6 +30,6 @@ module AttendancesHelper
 
   # 時間表示に変換
   def hour_2f(int_time)
-    format("%.2f", int_time / 60)
+    format("%.2f", int_time / 60.0)
   end
 end

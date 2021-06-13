@@ -59,7 +59,6 @@
                               <!-- 曜日 -->
                               <td><%= $days_of_the_week[at.worked_on.wday] %></td>
                               <!-- 変更前出社時 -->
-                              <%# debugger %>
                               <td>
                                 <%= l(at.started_at, format: :hour) if at.started_at.present? %>
                               </td>

@@ -33,9 +33,21 @@
                     <!-- 日付 -->
                     <td><%= day.worked_on %></td>
                     <!-- 変更前出社時間 -->
-                    <td><%= day.started_at.strftime("%H:%M") if day.started_at.present? %></td>
+                    <td>
+                      <% if day.before_start_at? %>
+                        <%= day.before_start_at.strftime("%H:%M") %>
+                      <% else %>
+                        <%= day.started_at.strftime("%H:%M") if day.started_at.present? %>
+                      <% end %>
+                    </td>
                     <!-- 変更前退社時間 -->
-                    <td><%= day.finished_at.strftime("%H:%M") if day.finished_at.present? %></td>
+                    <td>
+                      <% if day.before_finish_at? %>
+                        <%= day.before_finish_at.strftime("%H:%M") %>
+                      <% else %>
+                        <%= day.finished_at.strftime("%H:%M") if day.finished_at.present? %>
+                      <% end %>
+                    </td>
                     <!-- 変更後出社時間 -->
                     <td><%= day.request_start_at.strftime("%H:%M") if day.request_start_at.present? %></td>
                     <!-- 変更後退社時間 -->
