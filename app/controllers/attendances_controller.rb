@@ -123,7 +123,7 @@ class AttendancesController < ApplicationController
         if item["kintai_change_allow_check"] == "true" 
           if item["kintai_change_allow"] == "2" # 承認
             attendance = Attendance.find(id)
-            attendance.update_attributes(before_start_at: Attendance.find(id).started_at,
+            attendance.update_attributes!(before_start_at: Attendance.find(id).started_at,
                                          before_finish_at: Attendance.find(id).finished_at, started_at: Attendance.find(id).request_start_at, finished_at: Attendance.find(id).request_finish_at,
                                          next_day: Attendance.find(id).request_next_day)
             attendance.update_attributes!(item)
