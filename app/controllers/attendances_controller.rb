@@ -60,8 +60,8 @@ class AttendancesController < ApplicationController
 
   def edit_overwork_request
     # @attendance = Attendance.find(params[:id])↓これでも良い
-    @attendance = User.find(params[:user_id]).attendances.find(params[:id])
-    @user = User.find(@attendance.user_id)
+    @attendance = User.find(params[:user_id]).attendances.find(params[:id]).order(:id)
+    @user = User.find(@attendance.user_id).order(:id)
   end
 
   def update_overwork_request
