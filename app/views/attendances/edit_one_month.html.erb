@@ -53,9 +53,15 @@
               </td>
               <!--在社時間-->
               <td>
-                <% if day.started_at.present? && day.finished_at.present? %>
-                  <%= working_times(day.started_at, day.finished_at) %>
-                <% end %>
+
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <% if day.next_day == true %>
+                <%= working_times(day.started_at.floor_to(15.minutes), (day.finished_at + 24 * 60 * 60).floor_to(15.minutes)) %>
+              <% else %>
+                <%=  working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% end %>
+            <% end %>
+
               </td>
               <!--備考-->
               <td><%= attendance.text_field :note, class: "form-control" %></td>
