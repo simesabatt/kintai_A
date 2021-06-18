@@ -60,14 +60,14 @@ class AttendancesController < ApplicationController
 
   def edit_overwork_request
     # @attendance = Attendance.find(params[:id])↓これでも良い
-    @attendance = User.find(params[:user_id]).attendances.find(params[:id]).order(:id)
-    @user = User.find(@attendance.user_id).order(:id)
+    @attendance = User.find(params[:user_id]).attendances.find(params[:id])
+    @user = User.find(@attendance.user_id)
   end
 
   def update_overwork_request
     @attendance = Attendance.find(params[:id])
     @user = User.find(params[:user_id])
-    if params[:attendance][:next_day] == "true"
+    if params[:attendance][:request_next_day] == "true"
       params[:attendance]["overwork_request(3i)"] = (params[:attendance]["overwork_request(3i)"].to_i+1).to_s
     else
       if params[:attendance]["overwork_request(4i)"].to_i*60 + params[:attendance]["overwork_request(5i)"].to_i < User.find(params[:user_id]).designates_work_end_time.hour * 60 + User.find(params[:user_id]).designates_work_end_time.min
@@ -123,10 +123,15 @@ class AttendancesController < ApplicationController
         if item["kintai_change_allow_check"] == "true" 
           if item["kintai_change_allow"] == "2" # 承認
             attendance = Attendance.find(id)
-            attendance.update_attributes!(before_start_at: Attendance.find(id).started_at,
-                                         before_finish_at: Attendance.find(id).finished_at, started_at: Attendance.find(id).request_start_at, finished_at: Attendance.find(id).request_finish_at,
-                                         next_day: Attendance.find(id).request_next_day)
+            attendance.update_attributes!(started_at: Attendance.find(id).request_start_at,
+                                          finished_at: Attendance.find(id).request_finish_at,
+                                          next_day: Attendance.find(id).request_next_day)
             attendance.update_attributes!(item)
+            if Attendance.find(id)["before_start_at"].nil?
+              attendance.update_attributes!(before_start_at: Attendance.find(id).started_at,
+                                            before_finish_at: Attendance.find(id).finished_at)
+              attendance.update_attributes!(item)
+            end
           elsif item["kintai_change_allow"] == "3" # 否認
             attendance = Attendance.find(id)
             attendance.update_attributes!(item)
@@ -197,12 +202,12 @@ class AttendancesController < ApplicationController
 
     # 残業申請モーダル
     def overwork_request_params
-      params.require(:attendance).permit(:overwork_request, :next_day, :work_content, :superior_confirm, :over_work_allow_check)
+      params.require(:attendance).permit(:overwork_request, :request_next_day, :work_content, :superior_confirm, :over_work_allow_check)
     end
 
     # 残業承認
     def overwork_allow_update
-      params.permit(attends: [:over_work_allow, :over_work_allow_check])[:attends]
+      params.permit(attends: [:over_work_allow, :over_work_allow_check, :request_next_day])[:attends]
     end
 
     # 勤怠変更承認

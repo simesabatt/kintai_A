@@ -183,8 +183,8 @@
           <!-- = 終了予定時間 - 指定勤務終了時間-->
           <td>
             <% if day.overwork_request.present? %>
-              <% if day.next_day == true %>
-                <%= jikangai = hour_2f(int_time(day.overwork_request) - int_time(@user.designates_work_end_time) + 24 * 60) %>
+              <% if day.request_next_day == true %>
+                <%= jikangai = hour_2f(int_time(day.overwork_request) - int_time(@user.designates_work_end_time) + 24 * 60.0) %>
               <% else %>
                 <%= jikangai = hour_2f(int_time(day.overwork_request) - int_time(@user.designates_work_end_time)) %>
               <% end %>

@@ -48,7 +48,7 @@
                             <th><%= User.find_by(id: at.user_id).designates_work_end_time.strftime("%H:%M") %></th>
                             <!-- 時間外時間 -->
                             <th>
-                              <% if at.next_day == true %>
+                              <% if at.request_next_day == true %>
                                 <%= jikangai = hour_2f(int_time(at.overwork_request) - int_time(User.find_by(id: at.user_id).designates_work_end_time) + 24 * 60) %>
                                 hr
                               <% else %>
