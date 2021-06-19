@@ -117,7 +117,7 @@ class UsersController < ApplicationController
       date = params["log_date(1i)"].to_s + '-' + "%02d" % params["log_date(2i)"].to_s + '-01'
       search_date = Date.parse(date).beginning_of_month 
     end
-    @attendances = Attendance.where(user_id: params[:id]).where(kintai_change_allow: 2).where(worked_on: search_date.in_time_zone.all_month)
+    @attendances = Attendance.where(user_id: params[:id]).where(kintai_change_allow: 2).where(worked_on: search_date.in_time_zone.all_month).order(:worked_on)
     # debugger
     # redirect_to kintai_log_user_path(@attendances)
   end
