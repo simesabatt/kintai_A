@@ -26,7 +26,9 @@ class Attendance < ApplicationRecord
 
   def request_start_at_than_request_finish_at_fast_if_invalid
     if request_start_at.present? && request_finish_at.present?
-      errors.add(:request_start_at, "より早い退勤時間は無効です") if request_start_at > request_finish_at
+      unless kintai_change_next_day == true
+        errors.add(:request_start_at, "より早い退勤時間は無効です") if request_start_at > request_finish_at || kintai_change_next_day == true
+      end
     end
   end
 end

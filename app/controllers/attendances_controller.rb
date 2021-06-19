@@ -35,11 +35,8 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       attendances_params.each do |id, item|
         if item["kintai_change_confirm"].present?
+           #debugger
             if item["kintai_change_next_day"] == "true"
-            #  debugger
-            #   item["request_finish_at"] = (item["request_finish_at"].to_time + 60 * 60 * 24).to_s
-            #   debugger 
-              #.to_time.strftime("%T.%L") 
             end
           attendance = Attendance.find(id)
           item[:kintai_change_allow] = 1 # 申請中フラグ
