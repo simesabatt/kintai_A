@@ -123,8 +123,8 @@ class UsersController < ApplicationController
   end
 
   def update_kintai_log
-    @attendances = Attendance.where(user_id: params[:id]).where(kintai_change_allow: 2)
-    redirect_to kintai_log_user_path(@user).order(:worked_on)
+    @attendances = Attendance.where(user_id: params[:id]).where(kintai_change_allow: 2).order(:worked_on)
+    redirect_to kintai_log_user_path(@user)
     #render partial: "kintai_log"
   end
 
