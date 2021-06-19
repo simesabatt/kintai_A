@@ -21,7 +21,7 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:id)
     @superiors = User.where(superior: true).where.not(id: params[:id])
     @allow = Attendance.where(user_id: params[:id]).where(worked_on: @first_day)[0].kintai_month_allow
       respond_to do |format|
