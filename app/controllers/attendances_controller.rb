@@ -35,7 +35,7 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       attendances_params.each do |id, item|
         if item["kintai_change_confirm"].present?
-            if item["request_next_day"] == "true"
+            if item["kintai_change_next_day"] == "true"
             #  debugger
             #   item["request_finish_at"] = (item["request_finish_at"].to_time + 60 * 60 * 24).to_s
             #   debugger 
@@ -125,7 +125,7 @@ class AttendancesController < ApplicationController
             attendance = Attendance.find(id)
             attendance.update_attributes!(started_at: Attendance.find(id).request_start_at,
                                           finished_at: Attendance.find(id).request_finish_at,
-                                          next_day: Attendance.find(id).request_next_day)
+                                          next_day: Attendance.find(id).kintai_change_next_day)
             attendance.update_attributes!(item)
             if Attendance.find(id)["before_start_at"].nil?
               attendance.update_attributes!(before_start_at: Attendance.find(id).started_at,
@@ -186,7 +186,7 @@ class AttendancesController < ApplicationController
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.permit(attendances: [:started_at, :finished_at, :note, :kintai_change_confirm, :kintai_change_allow, :kintai_change_allow_check, :request_start_at, :request_finish_at, :request_next_day])[:attendances]
+      params.permit(attendances: [:started_at, :finished_at, :note, :kintai_change_confirm, :kintai_change_allow, :kintai_change_allow_check, :request_start_at, :request_finish_at, :request_next_day, :kintai_change_next_day])[:attendances]
     end
 
     # beforeフィルター
@@ -212,7 +212,7 @@ class AttendancesController < ApplicationController
 
     # 勤怠変更承認
     def change_allow_update
-      params.permit(attends: [:started_at, :finished_at, :request_start_at, :request_finish_at, :kintai_change_allow_check, :kintai_change_allow, :before_start_at, :before_finish_at, :before_next_day])[:attends]
+      params.permit(attends: [:started_at, :finished_at, :request_start_at, :request_finish_at, :kintai_change_allow_check, :kintai_change_allow, :before_start_at, :before_finish_at, :before_next_day, :kintai_change_next_day])[:attends]
     end
 
     # 1ヶ月の勤怠申請承認

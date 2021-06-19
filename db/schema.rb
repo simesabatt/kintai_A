@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20210518140812) do
     t.datetime "before_start_at"
     t.datetime "before_finish_at"
     t.boolean "before_next_day"
+    t.boolean "kintai_change_next_day"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -60,11 +61,11 @@ ActiveRecord::Schema.define(version: 20210518140812) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_work_time", default: "2021-06-12 23:00:00"
-    t.datetime "work_time", default: "2021-06-12 22:30:00"
+    t.datetime "basic_work_time", default: "2021-06-18 23:00:00"
+    t.datetime "work_time", default: "2021-06-18 22:30:00"
     t.boolean "superior", default: false
-    t.datetime "designates_work_start_time", default: "2021-06-13 00:00:00"
-    t.datetime "designates_work_end_time", default: "2021-06-13 09:00:00"
+    t.datetime "designates_work_start_time", default: "2021-06-19 00:00:00"
+    t.datetime "designates_work_end_time", default: "2021-06-19 09:00:00"
     t.integer "employee_number"
     t.integer "uid"
     t.boolean "work_now"
