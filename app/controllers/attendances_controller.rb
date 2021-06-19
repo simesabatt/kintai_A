@@ -88,7 +88,7 @@ class AttendancesController < ApplicationController
 
   def edit_overwork_request_confirm
     @user = User.find(params[:user_id])
-    @attendances = Attendance.where(superior_confirm: @user.id, over_work_allow: 1).order(:user_id).group_by(&:user_id)
+    @attendances = Attendance.where(superior_confirm: @user.id, over_work_allow: 1).order(:id).group_by(&:user_id)
   end
 
   def update_overwork_request_confirm
@@ -113,7 +113,7 @@ class AttendancesController < ApplicationController
 
   def edit_kintai_change_confirm
     @user = User.find(params[:user_id])
-    @attendances = Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).order(:user_id).group_by(&:user_id)
+    @attendances = Attendance.where(kintai_change_confirm: @user.id, kintai_change_allow: 1).order(:id).group_by(&:user_id)
   end
 
   def update_kintai_change_confirm
@@ -153,7 +153,7 @@ class AttendancesController < ApplicationController
 
   def edit_month_change_confirm
     @user = User.find(params[:user_id])
-    @attendances = Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).order(:user_id).group_by(&:user_id)
+    @attendances = Attendance.where(kintai_month_confirm: @user.id, kintai_month_allow: 1).order(:id).group_by(&:user_id)
   end
 
   def update_month_change_confirm
